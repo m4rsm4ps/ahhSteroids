@@ -5,6 +5,13 @@ from player import Player
 import pygame
 
 
+updatable = pygame.sprite.Group()
+drowable = pygame.sprite.Group()
+
+
+Player.containers = (updatable, drowable)
+
+
 def main():
     print("Starting asteroids!")
     print(f"Screen width: {SCREEN_WIDTH}")
@@ -19,9 +26,12 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
+
+        for u in updatable:
+            u.update(dt)
         screen.fill(color="Black")
-        playr.update(dt)
-        playr.draw(screen)
+        for d in drowable:
+            d.draw(screen)
         pygame.display.flip()
         dt = game_clock.tick(60) / 1000
     
