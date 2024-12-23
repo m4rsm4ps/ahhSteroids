@@ -11,9 +11,13 @@ import sys
 
 updatable = pygame.sprite.Group()
 drowable = pygame.sprite.Group()
+asteroids = pygame.sprite.Group()
+shots = pygame.sprite.Group()
 
-
+Shot.containers = (updatable, drowable, shots)
 Player.containers = (updatable, drowable)
+Asteroid.containers = (updatable, drowable, asteroids) 
+AsteroidField.containers = (updatable,)
 
 
 def main():
@@ -24,16 +28,10 @@ def main():
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     game_clock = pygame.time.Clock()
     dt = 0
+
     playr = Player(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
 
-    asteroids = pygame.sprite.Group()
-    Asteroid.containers = (updatable, drowable, asteroids) 
-
-    AsteroidField.containers = (updatable,)
     af = AsteroidField()
-
-    shots = pygame.sprite.Group()
-    Shot.containers = (updatable, drowable, shots)
 
     while True:
         for event in pygame.event.get():
@@ -42,7 +40,12 @@ def main():
 
         for u in updatable:
             u.update(dt)
+        
         for a in asteroids:
+            for s in shots:
+                if a.collides(s):
+                    a.kill(); s.kill()
+                    
             if playr.collides(a):
                  print("YOU DIED")
                  sys.exit(0)
